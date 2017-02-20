@@ -8,8 +8,9 @@ import java.awt.image.*;
 
 public class Indicator extends DrawnObject
 {
-	private static Color FILL=Color.LIGHT_GRAY;
-	private static Color OUTLINE=Color.GRAY;
+	private static Color ARROW_FILL=Color.DARK_GRAY;
+	private static double ARROW_SCALE=0.5;
+	private static int ARROW_WIDTH=5;
 	
 	private static Image bg;
 	private static Image arrow;
@@ -95,10 +96,26 @@ public class Indicator extends DrawnObject
 	public void paint(Graphics g)
 	{
 		Graphics2D g2d=(Graphics2D)g;
-		g2d.setColor(OUTLINE);
-		g2d.fill(new Ellipse2D.Double(x-Kanyes.DIAMETER/2, y-Kanyes.DIAMETER/2, Kanyes.DIAMETER, Kanyes.DIAMETER));
-		g2d.setColor(FILL);
+		g2d.setColor(ARROW_FILL);
 		g2d.drawImage(bg, (int)x-bg.getWidth(null)/2, (int)y-bg.getHeight(null)/2, null);
-		g2d.draw(new Line2D.Double(x,y,(int)(x+(Kanyes.DIAMETER/2)*Math.cos(theta)),(int)(y+(Kanyes.DIAMETER/2)*Math.sin(theta))));
+		g2d.setStroke(new BasicStroke(ARROW_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));
+		g2d.draw(new Line2D.Double(
+			(int)(x-(ARROW_SCALE*Kanyes.DIAMETER/2)*Math.cos(theta)),
+			(int)(y-(ARROW_SCALE*Kanyes.DIAMETER/2)*Math.sin(theta)),
+			(int)(x+(ARROW_SCALE*Kanyes.DIAMETER/2)*Math.cos(theta)),
+			(int)(y+(ARROW_SCALE*Kanyes.DIAMETER/2)*Math.sin(theta))
+		));
+		g2d.draw(new Line2D.Double(
+			(int)(x+(ARROW_SCALE*Kanyes.DIAMETER/2)*Math.cos(theta)),
+			(int)(y+(ARROW_SCALE*Kanyes.DIAMETER/2)*Math.sin(theta)),
+			(int)(x-(ARROW_SCALE*Kanyes.DIAMETER/2)*Math.sin(theta)),
+			(int)(y+(ARROW_SCALE*Kanyes.DIAMETER/2)*Math.cos(theta))
+		));
+		g2d.draw(new Line2D.Double(
+			(int)(x+(ARROW_SCALE*Kanyes.DIAMETER/2)*Math.cos(theta)),
+			(int)(y+(ARROW_SCALE*Kanyes.DIAMETER/2)*Math.sin(theta)),
+			(int)(x+(ARROW_SCALE*Kanyes.DIAMETER/2)*Math.sin(theta)),
+			(int)(y-(ARROW_SCALE*Kanyes.DIAMETER/2)*Math.cos(theta))
+		));
 	}
 }

@@ -5,6 +5,7 @@ import javax.imageio.*;
 import java.awt.*;
 import java.io.*;
 import java.applet.*;
+import javax.sound.sampled.*;
 
 public class KanyeZone extends JApplet
 {
@@ -17,6 +18,9 @@ public class KanyeZone extends JApplet
 			getImage(getCodeBase(),"Images/Kanye2.png"));
 		Indicator.setStaticImage(getImage(getCodeBase(),"Images/SilhouetteBG.png"),
 			null);
+		GamePanel.setStaticAudioClip(getAudioClip(getCodeBase(),"Audio/DontLetMeGetIntoMyZone.wav"));
+		
+		System.out.println("pizza");
 		GamePanel app = new GamePanel();
 		setContentPane(app);
 		setVisible(true);
@@ -42,7 +46,9 @@ public class KanyeZone extends JApplet
 				ImageIO.read(ClassLoader.getSystemResource("Images/Kanye2.png")));
 			Indicator.setStaticImage(ImageIO.read(ClassLoader.getSystemResource("Images/SilhouetteBG.png")),
 				null);
-		}catch (IOException e)
+			GamePanel.setStaticAudioClip(new File("Audio/DontLetMeGetIntoMyZone.wav"));
+		}
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}

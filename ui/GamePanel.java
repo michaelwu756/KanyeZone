@@ -6,6 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.applet.AudioClip;
+import javax.sound.sampled.*;
+import java.io.*;
 
 public class GamePanel extends JPanel implements KeyListener,MouseListener,FocusListener,Runnable
 {
@@ -18,6 +21,9 @@ public class GamePanel extends JPanel implements KeyListener,MouseListener,Focus
 	private static double ACCEL = 0.024/(Math.PI);
 	private static double MAX_SPEED = Math.PI/50;
 	private static int MONEY_NUM = 20;
+	private static AudioClip audClip;
+	private static File audFile;
+	private Clip audClip2;
 	private Color innerColor, outerColor;
 	private Indicator indicator;
 	private Kanyes kanye;
@@ -30,6 +36,16 @@ public class GamePanel extends JPanel implements KeyListener,MouseListener,Focus
 	private boolean spacePressed, spaceHeld, focus;
 	private Boolean direction[];
 	private Thread anim;
+	
+	public static void setStaticAudioClip(AudioClip clip)
+	{
+		audClip = clip;
+	}
+	
+	public static void setStaticAudioClip(File clip)
+	{
+		audFile = clip;
+	}
 	
 	public GamePanel()
 	{
@@ -67,7 +83,7 @@ public class GamePanel extends JPanel implements KeyListener,MouseListener,Focus
 			}
 		}
 		for (int i=0; i<objectsToDraw.size(); i++)
-			{
+		{
 			if (objectsToDraw.get(i) instanceof Money)
 			{
 				Money money = (Money)(objectsToDraw.get(i));
@@ -157,6 +173,7 @@ public class GamePanel extends JPanel implements KeyListener,MouseListener,Focus
 	}
 	public void run()
 	{
+		
 		Thread thisThread = Thread.currentThread();
 		resetValues();
 		while(anim==thisThread)
@@ -235,10 +252,12 @@ public class GamePanel extends JPanel implements KeyListener,MouseListener,Focus
 	public void focusGained(FocusEvent e)
 	{
 		focus=true;
+		startAudio();
 	}
 	public void focusLost(FocusEvent e)
 	{
 		focus=false;
+		stopAudio();
 	}
 	
 	public void paintComponent(Graphics g)
@@ -263,7 +282,7 @@ public class GamePanel extends JPanel implements KeyListener,MouseListener,Focus
 		g.drawString("Score:",40,220);
 		g.drawString(String.valueOf(score),45,250);
 		g.setFont(new Font("Arial", Font.PLAIN, 18));
-		g.drawString("by cheesyfluff", 20, 320);
+		g.drawString("by Michael Wu", 20, 320);
 		if (!focus && !theZone.inTheZone())
 		{
 			g.setColor(new Color(0,0,0,150));
@@ -271,5 +290,33 @@ public class GamePanel extends JPanel implements KeyListener,MouseListener,Focus
 			g.setColor(Color.WHITE);
 			g.drawString("Paused", -30+VWIDTH/2,VHEIGHT/2);
 		}
+	}
+	
+	private void startAudio()
+	{
+		if(audClip==null)
+		{
+			try
+			{
+				AudioInputStream soundStream = AudioSystem.getAudioInputStream(audFile);	
+				Clip clip = AudioSystem.getClip();
+				clip.open(soundStream);
+				audClip2=clip;
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			audClip2.loop(Clip.LOOP_CONTINUOUSLY);
+		}
+		else
+			audClip.loop();
+	}
+	private void stopAudio()
+	{
+		if(audClip==null)
+			audClip2.stop();
+		else
+			audClip.stop();
 	}
 }
