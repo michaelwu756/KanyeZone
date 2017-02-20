@@ -19,8 +19,6 @@ public class KanyeZone extends JApplet
 		Indicator.setStaticImage(getImage(getCodeBase(),"Images/SilhouetteBG.png"),
 			null);
 		GamePanel.setStaticAudioClip(getAudioClip(getCodeBase(),"Audio/DontLetMeGetIntoMyZone.wav"));
-		
-		System.out.println("pizza");
 		GamePanel app = new GamePanel();
 		setContentPane(app);
 		setVisible(true);
